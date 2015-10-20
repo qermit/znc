@@ -92,7 +92,7 @@ public:
 	EModRet OnChanBufferPlayLine(CChan& Chan, CClient& Client, CString& sLine) override;
 	EModRet OnPrivBufferPlayLine(CClient& Client, CString& sLine) override;
 	void OnClientLogin() override;
-	void OnClientDisconnect() override;
+	void OnClientLogout() override;
 	EModRet OnUserRaw(CString& sLine) override;
 	EModRet OnUserCTCPReply(CString& sTarget, CString& sMessage) override;
 	EModRet OnUserCTCP(CString& sTarget, CString& sMessage) override;
@@ -127,6 +127,7 @@ public:
 	EModRet OnAddUser(CUser& User, CString& sErrorRet) override;
 	EModRet OnDeleteUser(CUser& User) override;
 	void OnClientConnect(CZNCSock* pSock, const CString& sHost, unsigned short uPort) override;
+	void OnClientDisconnect(CZNCSock* pSock, const CString& sHost, unsigned short uPort) override;
 	void OnFailedLogin(const CString& sUsername, const CString& sRemoteIP) override;
 	EModRet OnUnknownUserRaw(CClient* pClient, CString& sLine) override;
 	bool IsClientCapSupported(CClient* pClient, const CString& sCap, bool bState) override;

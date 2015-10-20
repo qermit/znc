@@ -103,7 +103,7 @@ public:
 		SetBack();
 	}
 
-	void OnClientDisconnect() override {
+	void OnClientLogout() override {
 		/* There might still be other clients */
 		if (!GetNetwork()->IsUserAttached())
 			SetAway();

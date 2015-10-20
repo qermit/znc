@@ -252,7 +252,7 @@ public:
 		}
 	}
 
-	void OnClientDisconnect() override {
+	void OnClientLogout() override {
 		CUser* pUser = GetUser();
 		if (!pUser->IsUserAttached() && !pUser->IsBeingDeleted()) {
 			for (set<CPartylineChannel*>::iterator it = m_ssChannels.begin(); it != m_ssChannels.end(); ++it) {

@@ -342,7 +342,7 @@ public:
 	{
 		Back(true);
 	}
-	void OnClientDisconnect() override
+	void OnClientLogout() override
 	{
 		Away();
 	}

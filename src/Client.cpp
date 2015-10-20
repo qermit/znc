@@ -423,8 +423,11 @@ void CClient::Disconnected() {
 	SetNetwork(nullptr, true, false);
 
 	if (m_pUser) {
-		NETWORKMODULECALL(OnClientDisconnect(), m_pUser, pNetwork, this, NOTHING);
+		NETWORKMODULECALL(OnClientLogout(), m_pUser, pNetwork, this, NOTHING);
 	}
+      
+        GLOBALMODULECALL(OnClientDisconnect(this, GetRemoteIP(), GetRemotePort()), NOTHING);
+        
 }
 
 void CClient::ReachedMaxBuffer() {

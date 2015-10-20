@@ -78,7 +78,7 @@ public:
 		Log("[" + GetUser()->GetUserName() + "] connected to ZNC from " + GetClient()->GetRemoteIP());
 	}
 
-	void OnClientDisconnect() override {
+	void OnClientLogout() override {
 		Log("[" + GetUser()->GetUserName() + "] disconnected from ZNC from " + GetClient()->GetRemoteIP());
 	}
 

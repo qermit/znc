@@ -78,7 +78,7 @@ public:
 		}
 	}
 
-	void OnClientDisconnect() override {
+	void OnClientLogout() override {
 		if(m_bOnDisconnect) {
 			SendNotification("A client disconnected from your user. "
 				"Use the 'ListClients' command to see the " +

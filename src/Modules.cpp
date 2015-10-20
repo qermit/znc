@@ -682,7 +682,7 @@ CModule::EModRet CModule::OnPrivBufferPlayMessage(CMessage& Message) {
 }
 
 void CModule::OnClientLogin() {}
-void CModule::OnClientDisconnect() {}
+void CModule::OnClientLogout() {}
 CModule::EModRet CModule::OnUserRaw(CString& sLine) { return CONTINUE; }
 CModule::EModRet CModule::OnUserRawMessage(CMessage& Message) { return CONTINUE; }
 CModule::EModRet CModule::OnUserCTCPReply(CString& sTarget, CString& sMessage) { return CONTINUE; }
@@ -899,6 +899,7 @@ bool CModule::PutModNotice(const CString& sLine) {
 CModule::EModRet CModule::OnAddUser(CUser& User, CString& sErrorRet) { return CONTINUE; }
 CModule::EModRet CModule::OnDeleteUser(CUser& User) { return CONTINUE; }
 void CModule::OnClientConnect(CZNCSock* pClient, const CString& sHost, unsigned short uPort) {}
+void CModule::OnClientDisconnect(CZNCSock* pClient, const CString& sHost, unsigned short uPort) {}
 CModule::EModRet CModule::OnLoginAttempt(std::shared_ptr<CAuthBase> Auth) { return CONTINUE; }
 void CModule::OnFailedLogin(const CString& sUsername, const CString& sRemoteIP) {}
 CModule::EModRet CModule::OnUnknownUserRaw(CClient* pClient, CString& sLine) { return CONTINUE; }
@@ -975,7 +976,7 @@ bool CModules::OnRawMessage(CMessage& Message) { MODHALTCHK(OnRawMessage(Message
 bool CModules::OnNumericMessage(CNumericMessage& Message) { MODHALTCHK(OnNumericMessage(Message)); }
 
 bool CModules::OnClientLogin() { MODUNLOADCHK(OnClientLogin()); return false; }
-bool CModules::OnClientDisconnect() { MODUNLOADCHK(OnClientDisconnect()); return false; }
+bool CModules::OnClientLogout() { MODUNLOADCHK(OnClientLogout()); return false; }
 bool CModules::OnUserRaw(CString& sLine) { MODHALTCHK(OnUserRaw(sLine)); }
 bool CModules::OnUserRawMessage(CMessage& Message) { MODHALTCHK(OnUserRawMessage(Message)); }
 bool CModules::OnUserCTCPReply(CString& sTarget, CString& sMessage) { MODHALTCHK(OnUserCTCPReply(sTarget, sMessage)); }
@@ -1089,6 +1090,11 @@ bool CModules::OnDeleteUser(CUser& User) {
 
 bool CModules::OnClientConnect(CZNCSock* pClient, const CString& sHost, unsigned short uPort) {
 	MODUNLOADCHK(OnClientConnect(pClient, sHost, uPort));
+	return false;
+}
+
+bool CModules::OnClientDisconnect(CZNCSock* pClient, const CString& sHost, unsigned short uPort) {
+	MODUNLOADCHK(OnClientDisconnect(pClient, sHost, uPort));
 	return false;
 }
 

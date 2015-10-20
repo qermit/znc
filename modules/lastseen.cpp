@@ -82,7 +82,7 @@ public:
 		SetTime(GetUser());
 	}
 
-	void OnClientDisconnect() override {
+	void OnClientLogout() override {
 		SetTime(GetUser());
 	}
 

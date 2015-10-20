@@ -695,8 +695,8 @@ public:
 
 	/** Called when a client successfully logged in to ZNC. */
 	virtual void OnClientLogin();
-	/** Called when a client disconnected from ZNC. */
-	virtual void OnClientDisconnect();
+	/** Called when authenticated client disconnected from ZNC. */
+	virtual void OnClientLogout();
 
 	/** This module hook is called when a client sends a raw traffic line to ZNC.
 	 *  @param sLine The raw traffic line sent.
@@ -1124,6 +1124,13 @@ public:
 	 *  @param uPort The port the client is connecting from.
 	 */
 	virtual void OnClientConnect(CZNCSock* pSock, const CString& sHost, unsigned short uPort);
+	/** This module hook is called when 
+	 *  any of ZNC's listening sockets is about to close.
+	 *  @param pSock The incoming client socket.
+	 *  @param sHost The IP the client is connecting from.
+	 *  @param uPort The port the client is connecting from.
+	 */
+	virtual void OnClientDisconnect(CZNCSock* pSock, const CString& sHost, unsigned short uPort);
 	/** This module hook is called when a client tries to login. If your
 	 *  module wants to handle the login attempt, it must return
 	 *  CModule::EModRet::HALT;
@@ -1298,7 +1305,7 @@ public:
 	bool OnPrivBufferPlayMessage(CMessage& Message);
 
 	bool OnClientLogin();
-	bool OnClientDisconnect();
+	bool OnClientLogout();
 	bool OnUserRaw(CString& sLine);
 	bool OnUserRawMessage(CMessage& Message);
 	bool OnUserCTCPReply(CString& sTarget, CString& sMessage);
@@ -1376,6 +1383,7 @@ public:
 	bool OnAddUser(CUser& User, CString& sErrorRet);
 	bool OnDeleteUser(CUser& User);
 	bool OnClientConnect(CZNCSock* pSock, const CString& sHost, unsigned short uPort);
+	bool OnClientDisconnect(CZNCSock* pSock, const CString& sHost, unsigned short uPort);
 	bool OnLoginAttempt(std::shared_ptr<CAuthBase> Auth);
 	bool OnFailedLogin(const CString& sUsername, const CString& sRemoteIP);
 	bool OnUnknownUserRaw(CClient* pClient, CString& sLine);

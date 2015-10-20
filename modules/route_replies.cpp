@@ -251,7 +251,7 @@ public:
 		OnIRCConnected(); // Let's keep it in one place
 	}
 
-	void OnClientDisconnect() override
+	void OnClientLogout() override
 	{
 		requestQueue::iterator it;
 

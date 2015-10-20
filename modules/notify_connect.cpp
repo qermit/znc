@@ -25,7 +25,7 @@ public:
 		SendAdmins(GetUser()->GetUserName() + " attached (from " + GetClient()->GetRemoteIP() + ")");
 	}
 
-	void OnClientDisconnect() override {
+	void OnClientLogout() override {
 		SendAdmins(GetUser()->GetUserName() + " detached (from " + GetClient()->GetRemoteIP() + ")");
 	}
 
