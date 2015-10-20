@@ -56,12 +56,15 @@ public:
 			m_readed += chunk;
 		}
 	}
-	void Write(QString s = "") {
+	void Write(QString s = "", bool new_line = true) {
 		if (!m_device) return;
-		s += "\n";
 		if (m_verbose) {
 			std::cout << s.toStdString() << std::flush;
+			if (new_line) {
+				std::cout << std::endl;
+			}
 		}
+		s += "\n";
 		{
 			QTextStream str(m_device);
 			str << s;
@@ -88,6 +91,8 @@ template <typename Device>
 IO<Device> WrapIO(Device* d) {
 	return IO<Device>(d);
 }
+
+using Socket = IO<QTcpSocket>;
 
 class Process : public IO<QProcess> {
 public:
@@ -116,8 +121,8 @@ void WriteConfig(QString path) {
 	p.ReadUntil("Listen using SSL");Z;        p.Write();
 	p.ReadUntil("IPv6");Z;                    p.Write();
 	p.ReadUntil("Username");Z;                p.Write("user");
-	p.ReadUntil("password");Z;                p.Write("hunter2");
-	p.ReadUntil("Confirm");Z;                 p.Write("hunter2");
+	p.ReadUntil("password");Z;                p.Write("hunter2", false);
+	p.ReadUntil("Confirm");Z;                 p.Write("hunter2", false);
 	p.ReadUntil("Nick [user]");Z;             p.Write();
 	p.ReadUntil("Alternate nick [user_]");Z;  p.Write();
 	p.ReadUntil("Ident [user]");Z;            p.Write();
@@ -148,12 +153,12 @@ protected:
 		ASSERT_TRUE(m_server.listen(QHostAddress::LocalHost, 6667)) << m_server.errorString().toStdString();Z;
 	}
 
-	IO<QTcpSocket> ConnectIRCd() {
+	Socket ConnectIRCd() {
 		[this]{ ASSERT_TRUE(m_server.waitForNewConnection(30000 /* msec */)); }();
 		return WrapIO(m_server.nextPendingConnection());
 	}
 
-	IO<QTcpSocket> ConnectClient() {
+	Socket ConnectClient() {
 		m_clients.emplace_back();
 		QTcpSocket& sock = m_clients.back();
 		sock.connectToHost("127.0.0.1", 12345);
@@ -165,7 +170,7 @@ protected:
 		return std::unique_ptr<Process>(new Process("./znc", QStringList() << "--debug" << "--datadir" << m_dir.path(), false));
 	}
 
-	IO<QTcpSocket> LoginClient() {
+	Socket LoginClient() {
 		auto client = ConnectClient();
 		client.Write("PASS :hunter2");
 		client.Write("NICK nick");
@@ -196,6 +201,16 @@ TEST_F(ZNCTest, Connect) {
 	client.Write("NICK nick");
 	client.Write("USER u x x x");
 	client.ReadUntil("Welcome");Z;
+	client.Close();
+
+	client = ConnectClient();Z;
+	client.Write("NICK nick");
+	client.Write("USER user x x x");
+	client.ReadUntil("Configure your client to send a server password");
+	client.Close();
+
+	ircd.Write(":server 001 nick :Hello");
+	ircd.ReadUntil("WHO");Z;
 }
 
 TEST_F(ZNCTest, Channel) {
