@@ -40,7 +40,7 @@ static CString ZNC_DefaultCipher() {
 }
 #endif
 
-CZNCSock::CZNCSock(int timeout) : Csock(timeout), m_HostToVerifySSL(""), m_ssTrustedFingerprints(), m_ssCertVerificationErrors() {
+CZNCSock::CZNCSock(int timeout) : Csock(timeout), m_HostToVerifySSL(""), m_ssTrustedFingerprints(), m_ssCertVerificationErrors(), m_isServerSocket(false) {
 #ifdef HAVE_LIBSSL
 	DisableSSLCompression();
 	FollowSSLCipherServerPreference();
@@ -53,7 +53,7 @@ CZNCSock::CZNCSock(int timeout) : Csock(timeout), m_HostToVerifySSL(""), m_ssTru
 #endif
 }
 
-CZNCSock::CZNCSock(const CString& sHost, u_short port, int timeout) : Csock(sHost, port, timeout), m_HostToVerifySSL(""), m_ssTrustedFingerprints(), m_ssCertVerificationErrors() {
+CZNCSock::CZNCSock(const CString& sHost, u_short port, int timeout) : Csock(sHost, port, timeout), m_HostToVerifySSL(""), m_ssTrustedFingerprints(), m_ssCertVerificationErrors(), m_isServerSocket(false) {
 #ifdef HAVE_LIBSSL
 	DisableSSLCompression();
 	FollowSSLCipherServerPreference();
@@ -61,9 +61,23 @@ CZNCSock::CZNCSock(const CString& sHost, u_short port, int timeout) : Csock(sHos
 #endif
 }
 
+
+void CZNCSock::Copy( const Csock & cCopy ) {
+	const Csock *ptr = & cCopy;
+	if (CZNCSock const* obj = dynamic_cast<CZNCSock const *>(ptr)) {
+		m_isServerSocket = obj->m_isServerSocket;
+	} else {
+		m_isServerSocket = false;
+	}
+	Csock::Copy(cCopy);
+}
+
 void CZNCSock::Disconnected() {
 	ZNCDisconnected();
-	GLOBALMODULECALL(OnClientDisconnect(this, GetRemoteIP(), GetRemotePort()), NOTHING);	
+	if (m_isServerSocket) {
+	        DEBUG("Triggering OnClientDisconnect");
+		GLOBALMODULECALL(OnClientDisconnect(this, GetRemoteIP(), GetRemotePort()), NOTHING);
+	}
 }
 
 unsigned int CSockManager::GetAnonConnectionCount(const CString &sIP) const {

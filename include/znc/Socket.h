@@ -29,7 +29,7 @@ public:
 	CZNCSock(const CString& sHost, u_short port, int timeout = 60);
 	~CZNCSock() {}
 
-
+	void Copy(const Csock & psock) override;
 	void Disconnected() override;
 	virtual void ZNCDisconnected() {};
 
@@ -53,6 +53,7 @@ protected:
 	enum {
 		errnoBadSSLCert = 12569,
 	};
+	bool m_isServerSocket;
 
 private:
 	CString m_HostToVerifySSL;

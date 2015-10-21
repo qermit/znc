@@ -93,6 +93,7 @@ CIncomingConnection::CIncomingConnection(const CString& sHostname, unsigned shor
 
 	SetEncoding("UTF-8");
 	EnableReadLine();
+	m_isServerSocket = true;
 }
 
 void CIncomingConnection::ReachedMaxBuffer() {
