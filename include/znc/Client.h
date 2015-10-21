@@ -251,7 +251,7 @@ public:
 	void AuthUser();
 	void Connected() override;
 	void Timeout() override;
-	void Disconnected() override;
+	void ZNCDisconnected() override;
 	void ConnectionRefused() override;
 	void ReachedMaxBuffer() override;
 

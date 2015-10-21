@@ -61,6 +61,11 @@ CZNCSock::CZNCSock(const CString& sHost, u_short port, int timeout) : Csock(sHos
 #endif
 }
 
+void CZNCSock::Disconnected() {
+	ZNCDisconnected();
+	GLOBALMODULECALL(OnClientDisconnect(this, GetRemoteIP(), GetRemotePort()), NOTHING);	
+}
+
 unsigned int CSockManager::GetAnonConnectionCount(const CString &sIP) const {
 	const_iterator it;
 	unsigned int ret = 0;

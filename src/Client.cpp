@@ -417,7 +417,7 @@ void CClient::ConnectionRefused() {
 	DEBUG(GetSockName() << " == ConnectionRefused()");
 }
 
-void CClient::Disconnected() {
+void CClient::ZNCDisconnected() {
 	DEBUG(GetSockName() << " == Disconnected()");
 	CIRCNetwork* pNetwork = m_pNetwork;
 	SetNetwork(nullptr, true, false);
@@ -425,9 +425,6 @@ void CClient::Disconnected() {
 	if (m_pUser) {
 		NETWORKMODULECALL(OnClientLogout(), m_pUser, pNetwork, this, NOTHING);
 	}
-      
-        GLOBALMODULECALL(OnClientDisconnect(this, GetRemoteIP(), GetRemotePort()), NOTHING);
-        
 }
 
 void CClient::ReachedMaxBuffer() {

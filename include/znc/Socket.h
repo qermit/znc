@@ -29,6 +29,10 @@ public:
 	CZNCSock(const CString& sHost, u_short port, int timeout = 60);
 	~CZNCSock() {}
 
+
+	void Disconnected() override;
+	virtual void ZNCDisconnected() {};
+
 	int ConvertAddress(const struct sockaddr_storage * pAddr, socklen_t iAddrLen, CS_STRING & sIP, u_short * piPort) const override;
 #ifdef HAVE_LIBSSL
 	int VerifyPeerCertificate(int iPreVerify, X509_STORE_CTX * pStoreCTX) override;

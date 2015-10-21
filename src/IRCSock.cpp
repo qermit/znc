@@ -1160,7 +1160,7 @@ void CIRCSock::Connected() {
 	m_Nick.SetNick(sNick);
 }
 
-void CIRCSock::Disconnected() {
+void CIRCSock::ZNCDisconnected() {
 	IRCSOCKMODULECALL(OnIRCDisconnected(), NOTHING);
 
 	DEBUG(GetSockName() << " == Disconnected()");

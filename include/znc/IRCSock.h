@@ -50,7 +50,7 @@ public:
 
 	void ReadLine(const CString& sData) override;
 	void Connected() override;
-	void Disconnected() override;
+	void ZNCDisconnected() override;
 	void ConnectionRefused() override;
 	void SockError(int iErrno, const CString& sDescription) override;
 	void Timeout() override;
